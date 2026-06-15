@@ -1,0 +1,10 @@
+Filing_Name,Jurisdiction,Regulator,Firm_Type,Frequency,Due_Date,Status,Owner_Email,Description
+Form N-1A Annual Update,US,SEC,Open-Ended Fund,Annual,2026-08-28,Pending,compliance@example.com,Annual registration statement update for mutual funds
+Form N-CSR,US,SEC,Registered Investment Company,Semi-Annual,2026-09-05,Pending,reporting@example.com,Certified shareholder report for registered investment companies
+Form N-PX,US,SEC,Registered Investment Company,Annual,2026-08-31,Pending,proxy@example.com,Annual report of proxy voting record
+Form 13F,US,SEC,Institutional Investment Manager,Quarterly,2026-08-15,Submitted,trading@example.com,Quarterly report of equity holdings by institutional managers
+CASS Client Assets Report,UK,FCA,Investment Firm,Monthly,2026-07-15,Overdue,cass.team@example.com,Monthly report on client money and safe custody assets
+COREP Capital Adequacy,UK,FCA,Investment Firm,Quarterly,2026-08-11,Pending,risk@example.com,Capital adequacy reporting under the Investment Firms Prudential Regime
+Confirmation Statement,UK,Companies House,All Limited Companies,Annual,2026-10-14,Pending,legal@example.com,Annual filing confirming company details such as directors and shareholders
+MiFIR Transaction Report,UK,FCA,Investment Firm,Daily,2026-06-16,Pending,trading.ops@example.com,Daily report of trades executed to ensure market transparency
+AIFMD Annex IV,UK,FCA,Alternative Investment Fund Manager,Quarterly,2026-07-31,Pending,aifm.reporting@example.com,Detailed reporting on fund exposures liquidity and risk profiles
