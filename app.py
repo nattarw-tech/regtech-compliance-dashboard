@@ -1,24 +1,24 @@
 import streamlit as st
 import pandas as pd
 import os
-from openai import OpenAI
+from groq import Groq
 from compliance_logic import process_filings
 
 # 1. Page Configuration
 st.set_page_config(page_title="Global Regulatory Compliance Tracker", layout="wide")
 
-# 2. Initialize OpenAI Client
+# 2. Initialize Groq Client
 try:
-    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", "").strip())
-    openai_ready = True
+    client = Groq(api_key=os.environ.get("GROQ_API_KEY", "").strip())
+    ai_ready = True
 except Exception as e:
-    openai_ready = False
-    st.sidebar.error("OpenAI API key not found. AI features disabled.")
+    ai_ready = False
+    st.sidebar.error("Groq API key not found. AI features disabled.")
 
 # 3. AI Explainer Function
 def explain_filing(filing_name, jurisdiction, regulator):
     prompt = f"""
-    Explain the regulatory filing '{filing_name}' required by the '{regulator}' in the '{jurisdiction}'. 
+    Explain the regulatory filing '{filing_name}' required by the '{regulator}' in '{jurisdiction}'. 
     Provide a brief, plain-English summary (max 3 sentences) explaining:
     1. What the filing is.
     2. Why the regulator requires it.
@@ -26,7 +26,7 @@ def explain_filing(filing_name, jurisdiction, regulator):
     """
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="llama3-8b-8192",
             messages=[
                 {"role": "system", "content": "You are an expert RegTech compliance consultant."},
                 {"role": "user", "content": prompt}
@@ -74,7 +74,7 @@ else:
 
 # 8. Top Level Summary Metrics
 display_df = filtered_df[[
-    'Filing_Name', 'Urgency', 'Days_Remaining', 'Due_Date', 
+    'Filing_Name', 'Urgency', 'Days_Remaining', 'Due_Date',
     'Jurisdiction', 'Regulator', 'Firm_Type', 'Frequency', 'Status'
 ]]
 
@@ -94,11 +94,11 @@ st.subheader("🤖 AI Compliance Explainer")
 st.markdown("Select a filing below to get an instant, plain-English explanation of its regulatory requirements and risks.")
 
 filing_to_explain = st.selectbox(
-    "Select a filing to explain:", 
+    "Select a filing to explain:",
     options=["-- Select a filing --"] + display_df['Filing_Name'].tolist()
 )
 
-if filing_to_explain != "-- Select a filing --" and openai_ready:
+if filing_to_explain != "-- Select a filing --" and ai_ready:
     filing_data = display_df[display_df['Filing_Name'] == filing_to_explain].iloc[0]
     with st.spinner(f"Generating explanation for {filing_to_explain}..."):
         explanation = explain_filing(
