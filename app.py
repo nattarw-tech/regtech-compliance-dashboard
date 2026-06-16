@@ -1,19 +1,53 @@
 import streamlit as st
 import pandas as pd
+import os
+from openai import OpenAI
 from compliance_logic import process_filings
 
+# 1. Page Configuration
 st.set_page_config(page_title="Global Regulatory Compliance Tracker", layout="wide")
 
+# 2. Initialize OpenAI Client
+try:
+    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", "").strip())
+    openai_ready = True
+except Exception as e:
+    openai_ready = False
+    st.sidebar.error("OpenAI API key not found. AI features disabled.")
+
+# 3. AI Explainer Function
+def explain_filing(filing_name, jurisdiction, regulator):
+    prompt = f"""
+    Explain the regulatory filing '{filing_name}' required by the '{regulator}' in the '{jurisdiction}'. 
+    Provide a brief, plain-English summary (max 3 sentences) explaining:
+    1. What the filing is.
+    2. Why the regulator requires it.
+    3. What the penalty or risk is for missing the deadline.
+    """
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are an expert RegTech compliance consultant."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=150
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"Could not generate explanation. Error: {str(e)}"
+
+# 4. App Title
 st.title("🛡️ Global Regulatory Compliance Tracker")
 st.markdown("This dashboard provides a real-time overview of regulatory filing obligations across US (SEC) and UK (FCA/Companies House) jurisdictions.")
 
+# 5. Load the Processed Data
 df = process_filings('filing_schedule.csv')
-
 df['Due_Date_dt'] = pd.to_datetime(df['Due_Date'])
 df['Month'] = df['Due_Date_dt'].dt.strftime('%B %Y')
 
+# 6. Sidebar Filters
 st.sidebar.header("Filter Filings")
-
 selected_jurisdiction = st.sidebar.selectbox(
     "Select Jurisdiction",
     options=["All"] + sorted(df['Jurisdiction'].unique().tolist())
@@ -26,24 +60,22 @@ selected_month = st.sidebar.selectbox(
 )
 
 filtered_df = df.copy()
-
 if selected_jurisdiction != "All":
     filtered_df = filtered_df[filtered_df['Jurisdiction'] == selected_jurisdiction]
-
 if selected_month != "All":
     filtered_df = filtered_df[filtered_df['Month'] == selected_month]
 
-# Keep only the most important columns and reorder so Urgency is visible first
+# 7. Automated Alert Summary
+urgent_filings = filtered_df[filtered_df['Urgency'].isin(['Overdue', 'Due Soon'])]
+if not urgent_filings.empty:
+    st.error(f"⚠️ **Action Required:** You have {len(urgent_filings)} filings that are Overdue or Due Soon.")
+else:
+    st.success("✅ **All Clear:** No filings are overdue or due within 30 days based on your current filters.")
+
+# 8. Top Level Summary Metrics
 display_df = filtered_df[[
-    'Filing_Name',
-    'Urgency',
-    'Days_Remaining',
-    'Due_Date',
-    'Jurisdiction',
-    'Regulator',
-    'Firm_Type',
-    'Frequency',
-    'Status'
+    'Filing_Name', 'Urgency', 'Days_Remaining', 'Due_Date', 
+    'Jurisdiction', 'Regulator', 'Firm_Type', 'Frequency', 'Status'
 ]]
 
 total_filings = len(display_df)
@@ -56,6 +88,29 @@ col2.metric("🚨 Overdue", overdue)
 col3.metric("⚠️ Due Within 30 Days", due_soon)
 
 st.markdown("---")
+
+# 9. AI Explainer Tool
+st.subheader("🤖 AI Compliance Explainer")
+st.markdown("Select a filing below to get an instant, plain-English explanation of its regulatory requirements and risks.")
+
+filing_to_explain = st.selectbox(
+    "Select a filing to explain:", 
+    options=["-- Select a filing --"] + display_df['Filing_Name'].tolist()
+)
+
+if filing_to_explain != "-- Select a filing --" and openai_ready:
+    filing_data = display_df[display_df['Filing_Name'] == filing_to_explain].iloc[0]
+    with st.spinner(f"Generating explanation for {filing_to_explain}..."):
+        explanation = explain_filing(
+            filing_name=filing_data['Filing_Name'],
+            jurisdiction=filing_data['Jurisdiction'],
+            regulator=filing_data['Regulator']
+        )
+    st.info(explanation)
+
+st.markdown("---")
+
+# 10. Display the Color-Coded Table
 st.subheader("Filing Schedule Details")
 
 def color_urgency(val):
