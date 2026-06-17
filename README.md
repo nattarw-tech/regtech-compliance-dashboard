@@ -25,12 +25,9 @@ This tool solves that by decoupling the human-recorded Status from the machine-c
 
 🚀 How to Run Locally
 1	Clone this repository.
-2	Create a virtual environment and install dependencies:
-pip install -r requirements.txt
-3	Set your Groq API key as an environment variable:
-export GROQ_API_KEY="your-api-key"
-4	Run the Streamlit app:
-streamlit run app.py
+2	Create a virtual environment and install dependencies: pip install -r requirements.txt
+3	Set your Groq API key as an environment variable: export GROQ_API_KEY="your-api-key"
+4	Run the Streamlit app: streamlit run app.py
 
 👤 About the Author
 I am a Regulatory Reporting and Compliance Operations professional with 7+ years of hands-on SEC regulatory reporting experience at Franklin Templeton, underpinned by a 15-year career across regulated financial and legal information environments. I have a proven track record preparing and submitting SEC filings (Form N-1A, EDGAR) across 100+ fund portfolios against strict regulatory deadlines, and automating manual reporting processes in Excel/VBA, including a fee-data automation that reduced a multi-day manual task to minutes.
