@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import plotly.express as px
 from groq import Groq
+import feedparser
 from compliance_logic import process_filings
 
 # 1. Page Configuration
@@ -18,13 +19,15 @@ except Exception as e:
 
 # 3. AI Explainer Function
 def explain_filing(filing_name, jurisdiction, regulator):
+    """Calls Groq API to explain what a specific filing is and why it matters."""
     prompt = f"""
-    Explain the regulatory filing '{filing_name}' required by the '{regulator}' in '{jurisdiction}'. 
+    Explain the regulatory filing '{filing_name}' required by the '{regulator}' in the '{jurisdiction}'. 
     Provide a brief, plain-English summary (max 3 sentences) explaining:
     1. What the filing is.
     2. Why the regulator requires it.
     3. What the penalty or risk is for missing the deadline.
     """
+    
     try:
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
@@ -60,6 +63,7 @@ selected_month = st.sidebar.selectbox(
     options=["All"] + month_order
 )
 
+# Apply Filters
 filtered_df = df.copy()
 if selected_jurisdiction != "All":
     filtered_df = filtered_df[filtered_df['Jurisdiction'] == selected_jurisdiction]
@@ -75,7 +79,7 @@ else:
 
 # 8. Top Level Summary Metrics
 display_df = filtered_df[[
-    'Filing_Name', 'Urgency', 'Days_Remaining', 'Due_Date',
+    'Filing_Name', 'Urgency', 'Days_Remaining', 'Due_Date', 
     'Jurisdiction', 'Regulator', 'Firm_Type', 'Frequency', 'Status'
 ]]
 
@@ -137,7 +141,7 @@ st.subheader("🤖 AI Compliance Explainer")
 st.markdown("Select a filing below to get an instant, plain-English explanation of its regulatory requirements and risks.")
 
 filing_to_explain = st.selectbox(
-    "Select a filing to explain:",
+    "Select a filing to explain:", 
     options=["-- Select a filing --"] + display_df['Filing_Name'].tolist()
 )
 
@@ -164,3 +168,50 @@ def color_urgency(val):
 
 styled_df = display_df.style.map(color_urgency, subset=['Urgency'])
 st.dataframe(styled_df, use_container_width=True, hide_index=True)
+
+st.markdown("---")
+
+# 11. Live SEC EDGAR Feed
+st.subheader("📡 Live SEC EDGAR Filings (Form N-1A)")
+st.markdown("This section fetches the latest real-world Form N-1A submissions directly from the SEC EDGAR public RSS feed.")
+
+@st.cache_data(ttl=3600)  # Cache the data for 1 hour to avoid spamming the SEC API
+def fetch_edgar_feed():
+    # SEC requires a custom user agent with an email address
+    headers = {'User-Agent': 'RegTechPortfolioProject nattarwala@example.com'}
+    url = "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&type=N-1A&dateb=&owner=include&count=10&output=atom"
+    
+    import requests
+    try:
+        response = requests.get(url, headers=headers )
+        response.raise_for_status()
+        feed = feedparser.parse(response.content)
+        
+        entries = []
+        for entry in feed.entries:
+            entries.append({
+                "Company": entry.title.split(' - ')[0],
+                "Filing Type": entry.category,
+                "Submitted On": entry.updated,
+                "Link": entry.link
+            })
+        return pd.DataFrame(entries)
+    except Exception as e:
+        st.error(f"Failed to fetch EDGAR feed: {str(e)}")
+        return pd.DataFrame()
+
+with st.spinner("Fetching latest filings from SEC EDGAR..."):
+    edgar_df = fetch_edgar_feed()
+
+if not edgar_df.empty:
+    st.dataframe(
+        edgar_df,
+        column_config={
+            "Link": st.column_config.LinkColumn("Filing Link")
+        },
+        use_container_width=True,
+        hide_index=True
+    )
+else:
+    st.info("ℹ️ Live SEC EDGAR data is fetched when running on Streamlit Community Cloud. The SEC API is not accessible from local/Codespace environments due to network restrictions. The deployed version at the link above shows real-time filings.")
+
