@@ -185,8 +185,7 @@ with st.sidebar:
     )
 
     st.markdown("---")
-        st.markdown("<p style='font-size:0.75rem;color:#9ca3af;'>Built by Nisrin Shoukat Attarwala  
-MSc FinTech &middot; Bayes Business School</p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-size:0.75rem;color:#9ca3af;'>Built by Nisrin Shoukat Attarwala, MSc Financial Technology & Innovation, Bayes Business School</p>", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
 # APPLY FILTERS
