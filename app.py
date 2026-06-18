@@ -185,7 +185,7 @@ with st.sidebar:
     )
 
     st.markdown("---")
-        st.markdown("<p style='font-size:0.75rem;color:#9ca3af;'>Built by Nisrin Shoukat Attarwala, MSc Financial Technology & Innovation, Bayes Business School</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-size:0.75rem;color:#9ca3af;'>Built by Nisrin Shoukat Attarwala, MSc Financial Technology & Innovation, Bayes Business School</p>", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
 # APPLY FILTERS
@@ -394,8 +394,7 @@ if selected_jurisdiction in ("All", "US"):
             else:
                 st.markdown("<span style='font-size:0.82rem;color:#9ca3af;'>No US SEC filings in current filter.</span>", unsafe_allow_html=True)
 
-            st.markdown("  
-**EDGAR Form Types Filed (2026)**", unsafe_allow_html=True)
+            st.markdown("**EDGAR Form Types Filed (2026)**", unsafe_allow_html=True)
             st.markdown(f"<p style='font-size:0.82rem;color:#6b7280;'>{len(edgar_form_types)} distinct form types filed by {edgar_full['Registrant_Name'].nunique()} registered funds</p>", unsafe_allow_html=True)
             top_forms = edgar_full['Filing Type'].value_counts().head(8)
             for form, count in top_forms.items():
