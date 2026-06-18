@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+import plotly.express as px
 from groq import Groq
 from compliance_logic import process_filings
 
@@ -86,6 +87,48 @@ col1, col2, col3 = st.columns(3)
 col1.metric("Total Active Filings", total_filings)
 col2.metric("🚨 Overdue", overdue)
 col3.metric("⚠️ Due Within 30 Days", due_soon)
+
+st.markdown("---")
+
+# 8b. Charts Section
+col_chart1, col_chart2 = st.columns(2)
+
+with col_chart1:
+    st.subheader("📊 Filings by Urgency")
+    urgency_counts = display_df['Urgency'].value_counts().reset_index()
+    urgency_counts.columns = ['Urgency', 'Count']
+    color_map = {
+        'Overdue': '#e74c3c',
+        'Due Soon': '#f39c12',
+        'On Track': '#2ecc71',
+        'Completed': '#3498db'
+    }
+    fig1 = px.bar(
+        urgency_counts,
+        x='Urgency',
+        y='Count',
+        color='Urgency',
+        color_discrete_map=color_map,
+        text='Count'
+    )
+    fig1.update_layout(showlegend=False, height=300, margin=dict(t=20, b=20))
+    fig1.update_traces(textposition='outside')
+    st.plotly_chart(fig1, use_container_width=True)
+
+with col_chart2:
+    st.subheader("📅 Filing Timeline")
+    timeline_df = display_df.sort_values('Days_Remaining')
+    fig2 = px.bar(
+        timeline_df,
+        x='Days_Remaining',
+        y='Filing_Name',
+        orientation='h',
+        color='Urgency',
+        color_discrete_map=color_map,
+        labels={'Days_Remaining': 'Days Until Due', 'Filing_Name': ''}
+    )
+    fig2.update_layout(height=300, margin=dict(t=20, b=20), showlegend=False)
+    st.plotly_chart(fig2, use_container_width=True)
 
 st.markdown("---")
 
