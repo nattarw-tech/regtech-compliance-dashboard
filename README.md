@@ -4,18 +4,21 @@ Live Demo: [https://regtech-compliance-dashboard-jpeftg6ajanxph3onhb7vb.streamli
 
 ## Project Overview
 
-A smart, automated regulatory reporting dashboard designed to track compliance obligations across US (SEC) and UK (FCA/Companies House) jurisdictions. Built with Python and Streamlit, this tool replaces manual spreadsheet tracking with an automated data pipeline that recalculates deadlines daily and provides real-time AI-powered regulatory insights.
+A regulatory compliance dashboard built with Python and Streamlit to help teams monitor filing obligations across US (SEC) and UK (FCA/Companies House) jurisdictions.
 
-This project demonstrates a transition from traditional manual compliance tracking to modern RegTech automation.
+Rather than relying on manually updated status fields alone, the application recalculates deadline urgency from filing due dates each time it runs, helping teams identify overdue and upcoming obligations more reliably.
+
+The project demonstrates how a maintained filing tracker can be enhanced with automated deadline monitoring, proactive alerts, and AI-generated plain-English filing explanations.
 
 ---
 
 ## Key Features
 
 1. **Automated Deadline Engine**: A Python backend that calculates real-time `Days_Remaining` and dynamically assigns Urgency status (On Track, Due Soon, Overdue) independently of human input, eliminating stale data risk.
-2. **Interactive Web Dashboard**: A live Streamlit application featuring dynamic jurisdiction and chronological month filters.
+2. **Interactive Web Dashboard**: A live Streamlit application featuring dynamic jurisdiction, chronological month, and Urgency Status filters.
 3. **Generative AI Integration**: An embedded "AI Compliance Explainer" powered by Groq (LLaMA 3.3) that instantly generates plain-English summaries of complex regulatory filings, their purpose, and the risks of non-compliance.
-4. **Proactive Alerting**: Automated logic that scans the data model and surfaces critical warnings for overdue or imminent filings directly to the UI.
+4. **Proactive Alerting**: Surfaces overdue and near-term filing risks directly in the dashboard.
+5. **Cross-Jurisdiction Tracking**: Demonstrates monitoring for both US and UK regulatory reporting workflows.
 
 ---
 
