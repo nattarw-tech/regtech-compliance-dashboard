@@ -1,37 +1,15 @@
-"""
-compliance_logic.py
--------------------
-Backend processing module for the RegTrack Regulatory Compliance Dashboard.
-
-The CSV stores Days_From_Today as a relative integer offset (e.g. 45 means
-due in 45 days, -1 means 1 day overdue). This module calculates the actual
-Due_Date dynamically from today's system date on every run, so the dashboard
-is always evergreen — a recruiter opening it in six months will still see
-realistic, current-looking data rather than a wall of overdue filings.
-
-The machine-calculated Urgency is kept separate from the human-recorded
-Status field, which eliminates stale data risk.
-"""
-
 import pandas as pd
 from datetime import datetime, timedelta
+import os
 
 
 def process_filings(csv_file_path: str) -> pd.DataFrame:
-    """
-    Load the filing schedule CSV and enrich it with computed fields.
+    # Resolve the CSV path relative to this file's directory so it works
+    # both locally and on Streamlit Cloud regardless of working directory
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    full_path = os.path.join(base_dir, csv_file_path)
 
-    Parameters
-    ----------
-    csv_file_path : str
-        Path to the filing schedule CSV file.
-
-    Returns
-    -------
-    pd.DataFrame
-        Enriched DataFrame with Due_Date, Days_Remaining, and Urgency added.
-    """
-    df = pd.read_csv(csv_file_path)
+    df = pd.read_csv(full_path)
 
     # Calculate the exact due date dynamically based on today's date
     today = datetime.now().date()
@@ -39,7 +17,7 @@ def process_filings(csv_file_path: str) -> pd.DataFrame:
         lambda x: today + timedelta(days=int(x))
     )
 
-    # Convert Due_Date to a clean string for display
+    # Convert Due_Date to a clean string for Streamlit display
     df['Due_Date'] = pd.to_datetime(df['Due_Date']).dt.strftime('%Y-%m-%d')
 
     # Days_Remaining is the same as Days_From_Today — kept as a named alias
