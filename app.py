@@ -137,7 +137,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown(
-        "<p style='font-size:0.75rem;color:#9ca3af;'>Built by Nisrin Shoukat Attarwala<br/>MSc Financial Technology &amp; Innovation<br/>Bayes Business School</p>",
+        "<p style='font-size:0.75rem;color:#9ca3af;'>Built by Nisrin Shoukat Attarwala<br/>MSc Financial Technology &amp; Innovation<br/>Bayes Business School<br/>2026</p>",
         unsafe_allow_html=True
     )
 
