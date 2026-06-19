@@ -8,7 +8,7 @@ def process_filings(csv_file_path: str) -> pd.DataFrame:
     base_dir = os.path.dirname(os.path.abspath(__file__))
     full_path = os.path.join(base_dir, csv_file_path)
 
-    df = pd.read_csv(full_path)
+    df = pd.read_csv(full_path, sep=None, engine='python')
 
     # ─────────────────────────────────────────────────────────────────────────
     # ORIGINAL STATIC DATE LOGIC (preserved for reference — do not delete)
