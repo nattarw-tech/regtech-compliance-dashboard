@@ -22,17 +22,17 @@ def process_filings(csv_file_path: str) -> pd.DataFrame:
 
     # Days_Remaining is the same as Days_From_Today — kept as a named alias
     # so the rest of the app can reference it without knowing the CSV column name
-    df['Days_Remaining'] = df['Days_From_Today']
+    df['Days_Remaining'] = df['Days_From_Today']   # ← assign FIRST
 
-    def determine_urgency(row):
-        if row['Status'].strip() == 'Submitted':
-            return 'Completed'
-        elif row['Days_Remaining'] < 0:
-            return 'Overdue'
-        elif row['Days_Remaining'] <= 30:
-            return 'Due Soon'
-        else:
-            return 'On Track'
+def determine_urgency(row):                    # ← then define the function
+    if row['Status'].strip() == 'Submitted':
+        return 'Completed'
+    elif row['Days_Remaining'] < 0:
+        return 'Overdue'
+    elif row['Days_Remaining'] <= 30:
+        return 'Due Soon'
+    else:
+        return 'On Track'
 
     df['Urgency'] = df.apply(determine_urgency, axis=1)
 
