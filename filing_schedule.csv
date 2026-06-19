@@ -1,32 +1,32 @@
-Filing_Name,Jurisdiction,Regulator,Firm_Type,Frequency,Days_From_Today,Status,Owner_Email,Description
-Form N-1A Annual Update,US,SEC,Open-Ended Fund,Annual,75,Pending,compliance@example.com,Annual registration statement update for open-end mutual funds.
-Form N-CSR,US,SEC,Registered Investment Company,Semi-Annual,82,Pending,reporting@example.com,Certified shareholder report filed by registered management investment companies.
-Form N-PX,US,SEC,Registered Investment Company,Annual,77,Pending,proxy@example.com,Annual report of proxy voting record for registered funds.
-Form 13F,US,SEC,Institutional Investment Manager,Quarterly,61,Submitted,trading@example.com,Quarterly report of equity holdings by institutional investment managers with over $100m AUM.
-Form NPORT-P,US,SEC,Registered Investment Company,Monthly,42,Submitted,portfolio.reporting@example.com,Monthly portfolio holdings report filed by registered open-end funds.
-Form N-CEN,US,SEC,Registered Investment Company,Annual,89,Pending,fund.admin@example.com,Annual census report providing structural and operational data about registered investment companies.
-Form N-2,US,SEC,Closed-End Fund,As Required,105,Pending,closedend@example.com,Registration statement for closed-end management investment companies.
-Form 486APOS,US,SEC,Open-Ended Fund,As Required,114,Pending,legal@example.com,Post-effective amendment to registration statement for open-end funds under the 1940 Act.
-Form ADV Annual Update,US,SEC,Investment Adviser,Annual,104,Pending,adviser.compliance@example.com,Annual update to Form ADV for registered investment advisers disclosing business practices and conflicts.
-Form PF,US,SEC,Private Fund Adviser,Quarterly,72,Pending,private.funds@example.com,Reporting form for private fund advisers to provide systemic risk data to the SEC and FSOC.
-Form D,US,SEC,Private Fund Adviser,As Required,119,Pending,legal@example.com,Notice of exempt offering of securities filed within 15 days of first sale.
-Schedule 13G,US,SEC,Institutional Investment Manager,Annual,84,Pending,trading@example.com,Passive beneficial ownership report for investors holding over 5% of a registered class.
-CASS Client Assets Report,UK,FCA,Investment Firm,Monthly,-2,Overdue,cass.team@example.com,Monthly report on client money and safe custody assets under the Client Assets Sourcebook.
-COREP Capital Adequacy,UK,FCA,Investment Firm,Quarterly,57,Pending,risk@example.com,Common Reporting framework for capital requirements under CRD IV/CRR.
-MiFIR Transaction Report,UK,FCA,Investment Firm,Daily,-1,Pending,trading.ops@example.com,Daily report of trades executed to the FCA to ensure market transparency under MiFID II.
-AIFMD Annex IV,UK,FCA,Alternative Investment Fund Manager,Quarterly,43,Pending,aifm.reporting@example.com,Detailed reporting on fund exposures liquidity leverage and risk profiles under the AIFMD.
-EMIR Trade Repository Report,UK,FCA,Investment Firm,Daily,79,Pending,derivatives@example.com,Daily reporting of OTC and exchange-traded derivative contracts to a registered trade repository.
-SMCR Annual Certification,UK,FCA,Investment Firm,Annual,135,Pending,hr.compliance@example.com,Annual fitness and propriety certification for all Certified Persons under the Senior Managers and Certification Regime.
-ICARA Process Review,UK,FCA,Investment Firm,Annual,165,Pending,risk@example.com,Internal Capital and Risk Assessment document required under IFPR for MiFID investment firms.
-FCA REP018 Complaints Report,UK,FCA,Investment Firm,Semi-Annual,74,Pending,complaints@example.com,Biannual report of complaints received and resolved submitted to the FCA.
-Confirmation Statement,UK,Companies House,All Limited Companies,Annual,118,Pending,legal@example.com,Annual confirmation that company details on the register are accurate including directors and shareholders.
-PSC Register Update,UK,Companies House,All Limited Companies,As Required,44,Submitted,legal@example.com,Notification of changes to the register of Persons with Significant Control.
-Annual Accounts Filing,UK,Companies House,All Limited Companies,Annual,104,Pending,finance@example.com,Statutory annual accounts filed with Companies House within 9 months of financial year end.
-VAT Return,UK,HMRC,All VAT-Registered Entities,Quarterly,43,Submitted,finance@example.com,Quarterly VAT return submitted to HMRC reporting output and input tax.
-Corporation Tax Return CT600,UK,HMRC,All Limited Companies,Annual,196,Pending,finance@example.com,Annual corporation tax return filed with HMRC within 12 months of the accounting period end.
-PAYE Real Time Information,UK,HMRC,All Employers,Monthly,31,Pending,payroll@example.com,Monthly Full Payment Submission reporting employee pay and deductions to HMRC in real time.
-FINREP Financial Reporting,UK,FCA,Retail Bank/Investment Firm,Quarterly,74,Pending,finance.reporting@example.com,Financial reporting framework for credit institutions and investment firms under IFRS.
-CPO-PQR,US,CFTC,Commodity Pool Operator,Quarterly,58,Pending,cpo.reporting@example.com,Quarterly pool and performance report filed by registered commodity pool operators with the NFA.
-Form 40,US,CFTC,Foreign Trader,As Required,94,Pending,trading@example.com,Statement of reporting trader identifying large position holders in CFTC-regulated markets.
-Large Trader Report,US,CFTC,Investment Firm,Daily,1,Pending,trading.ops@example.com,Daily report of large trader positions in futures and options markets submitted to the CFTC.
-NFA Annual Questionnaire,US,NFA,Futures Commission Merchant,Annual,105,Pending,compliance@example.com,Annual self-examination questionnaire submitted by NFA members to demonstrate ongoing compliance.
+Filing_Name	Jurisdiction	Regulator	Firm_Type	Frequency	Days_From_Today	Due_Date	Status	Owner_Email	Description
+Form N-1A Annual Update	US	SEC	Open-Ended Fund	Annual	75	9/1/2026	Pending	compliance@example.com	Annual registration statement update for open-end mutual funds.
+Form N-CSR	US	SEC	Registered Investment Company	Semi-Annual	82	9/8/2026	Pending	reporting@example.com	Certified shareholder report filed by registered management investment companies.
+Form N-PX	US	SEC	Registered Investment Company	Annual	77	9/3/2026	Pending	proxy@example.com	Annual report of proxy voting record for registered funds.
+Form 13F	US	SEC	Institutional Investment Manager	Quarterly	61	8/18/2026	Submitted	trading@example.com	Quarterly report of equity holdings by institutional investment managers with over $100m AUM.
+Form NPORT-P	US	SEC	Registered Investment Company	Monthly	42	7/30/2026	Submitted	portfolio.reporting@example.com	Monthly portfolio holdings report filed by registered open-end funds.
+Form N-CEN	US	SEC	Registered Investment Company	Annual	89	9/15/2026	Pending	fund.admin@example.com	Annual census report providing structural and operational data about registered investment companies.
+Form N-2	US	SEC	Closed-End Fund	As Required	105	10/1/2026	Pending	closedend@example.com	Registration statement for closed-end management investment companies.
+Form 486APOS	US	SEC	Open-Ended Fund	As Required	114	10/10/2026	Pending	legal@example.com	Post-effective amendment to registration statement for open-end funds under the 1940 Act.
+Form ADV Annual Update	US	SEC	Investment Adviser	Annual	104	9/30/2026	Pending	adviser.compliance@example.com	Annual update to Form ADV for registered investment advisers disclosing business practices and conflicts.
+Form PF	US	SEC	Private Fund Adviser	Quarterly	72	8/29/2026	Pending	private.funds@example.com	Reporting form for private fund advisers to provide systemic risk data to the SEC and FSOC.
+Form D	US	SEC	Private Fund Adviser	As Required	119	10/15/2026	Pending	legal@example.com	Notice of exempt offering of securities filed within 15 days of first sale.
+Schedule 13G	US	SEC	Institutional Investment Manager	Annual	84	9/10/2026	Pending	trading@example.com	Passive beneficial ownership report for investors holding over 5% of a registered class.
+CASS Client Assets Report	UK	FCA	Investment Firm	Monthly	-2	7/16/2026	Overdue	cass.team@example.com	Monthly report on client money and safe custody assets under the Client Assets Sourcebook.
+COREP Capital Adequacy	UK	FCA	Investment Firm	Quarterly	57	8/14/2026	Pending	risk@example.com	Common Reporting framework for capital requirements under CRD IV/CRR.
+MiFIR Transaction Report	UK	FCA	Investment Firm	Daily	-1	6/17/2026	Pending	trading.ops@example.com	Daily report of trades executed to the FCA to ensure market transparency under MiFID II.
+AIFMD Annex IV	UK	FCA	Alternative Investment Fund Manager	Quarterly	43	7/31/2026	Pending	aifm.reporting@example.com	Detailed reporting on fund exposures liquidity leverage and risk profiles under the AIFMD.
+EMIR Trade Repository Report	UK	FCA	Investment Firm	Daily	79	9/5/2026	Pending	derivatives@example.com	Daily reporting of OTC and exchange-traded derivative contracts to a registered trade repository.
+SMCR Annual Certification	UK	FCA	Investment Firm	Annual	135	10/31/2026	Pending	hr.compliance@example.com	Annual fitness and propriety certification for all Certified Persons under the Senior Managers and Certification Regime.
+ICARA Process Review	UK	FCA	Investment Firm	Annual	165	11/30/2026	Pending	risk@example.com	Internal Capital and Risk Assessment document required under IFPR for MiFID investment firms.
+FCA REP018 Complaints Report	UK	FCA	Investment Firm	Semi-Annual	74	8/31/2026	Pending	complaints@example.com	Biannual report of complaints received and resolved submitted to the FCA.
+Confirmation Statement	UK	Companies House	All Limited Companies	Annual	118	10/14/2026	Pending	legal@example.com	Annual confirmation that company details on the register are accurate including directors and shareholders.
+PSC Register Update	UK	Companies House	All Limited Companies	As Required	44	8/1/2026	Submitted	legal@example.com	Notification of changes to the register of Persons with Significant Control.
+Annual Accounts Filing	UK	Companies House	All Limited Companies	Annual	104	9/30/2026	Pending	finance@example.com	Statutory annual accounts filed with Companies House within 9 months of financial year end.
+VAT Return	UK	HMRC	All VAT-Registered Entities	Quarterly	43	7/31/2026	Submitted	finance@example.com	Quarterly VAT return submitted to HMRC reporting output and input tax.
+Corporation Tax Return CT600	UK	HMRC	All Limited Companies	Annual	196	12/31/2026	Pending	finance@example.com	Annual corporation tax return filed with HMRC within 12 months of the accounting period end.
+PAYE Real Time Information	UK	HMRC	All Employers	Monthly	31	7/19/2026	Pending	payroll@example.com	Monthly Full Payment Submission reporting employee pay and deductions to HMRC in real time.
+FINREP Financial Reporting	UK	FCA	Retail Bank/Investment Firm	Quarterly	74	8/31/2026	Pending	finance.reporting@example.com	Financial reporting framework for credit institutions and investment firms under IFRS.
+CPO-PQR	US	CFTC	Commodity Pool Operator	Quarterly	58	8/15/2026	Pending	cpo.reporting@example.com	Quarterly pool and performance report filed by registered commodity pool operators with the NFA.
+Form 40	US	CFTC	Foreign Trader	As Required	94	9/20/2026	Pending	trading@example.com	Statement of reporting trader identifying large position holders in CFTC-regulated markets.
+Large Trader Report	US	CFTC	Investment Firm	Daily	-1	6/17/2026	Pending	trading.ops@example.com	Daily report of large trader positions in futures and options markets submitted to the CFTC.
+NFA Annual Questionnaire	US	NFA	Futures Commission Merchant	Annual	105	10/1/2026	Pending	compliance@example.com	Annual self-examination questionnaire submitted by NFA members to demonstrate ongoing compliance.
