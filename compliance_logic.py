@@ -2,7 +2,6 @@ import pandas as pd
 from datetime import datetime, timedelta
 import os
 
-
 def process_filings(csv_file_path: str) -> pd.DataFrame:
     # Resolve the CSV path relative to this file's directory so it works
     # both locally and on Streamlit Cloud regardless of working directory
@@ -22,17 +21,20 @@ def process_filings(csv_file_path: str) -> pd.DataFrame:
 
     # Days_Remaining is the same as Days_From_Today — kept as a named alias
     # so the rest of the app can reference it without knowing the CSV column name
-    df['Days_Remaining'] = df['Days_From_Today']   # ← assign FIRST
+    df['Days_Remaining'] = df['Days_From_Today']
 
-def determine_urgency(row):                    # ← then define the function
-    if row['Status'].strip() == 'Submitted':
-        return 'Completed'
-    elif row['Days_Remaining'] < 0:
-        return 'Overdue'
-    elif row['Days_Remaining'] <= 30:
-        return 'Due Soon'
-    else:
-        return 'On Track'
+    def determine_urgency(row):
+        # We must use the original CSV column 'Days_From_Today' here 
+        # because 'Days_Remaining' might not be reliably available inside apply() 
+        # depending on the Pandas version or environment (e.g. Streamlit Cloud).
+        if row['Status'].strip() == 'Submitted':
+            return 'Completed'
+        elif row['Days_From_Today'] < 0:
+            return 'Overdue'
+        elif row['Days_From_Today'] <= 30:
+            return 'Due Soon'
+        else:
+            return 'On Track'
 
     df['Urgency'] = df.apply(determine_urgency, axis=1)
 
