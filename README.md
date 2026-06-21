@@ -59,10 +59,12 @@ This tool solves that by decoupling the human-recorded Status from the machine-c
 
 ---
 
-## About the Author
+## About
 
-I am a Regulatory Reporting and Compliance Operations professional with 7+ years of hands-on SEC regulatory reporting experience at Franklin Templeton, underpinned by a 15-year career across regulated financial and legal information environments. I have a proven track record preparing and submitting SEC filings (Form N-1A, EDGAR) across 100+ fund portfolios against strict regulatory deadlines, and automating manual reporting processes in Excel/VBA, including a fee-data automation that reduced a multi-day manual task to minutes.
+Built by **Nisrin Shoukat Attarwala**  
+MSc Financial Technology & Innovation, Bayes Business School, 2026.
 
-Currently completing an MSc in Financial Technology & Innovation at Bayes Business School, I specialise in bridging the gap between complex regulatory requirements (SEC, FCA) and modern automation technologies. Analytical and detail-oriented, with a growing focus on RegTech automation and blockchain compliance, including an active Regulation-as-Code project on the XRP Ledger.
+This project is part of a portfolio targeting roles in Fintech, RegTech, and Product Operations.  
+See also: [DeFi Wallet Risk Intelligence](https://github.com/nattarw-tech/defi-wallet-risk-intelligence)
 
-Connect with me on LinkedIn: [https://www.linkedin.com/in/nisrin-attarwala/](https://www.linkedin.com/in/nisrin-attarwala/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect_With_Me-blue?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nisrin-attarwala/)
