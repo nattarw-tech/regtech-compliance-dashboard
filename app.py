@@ -73,17 +73,31 @@ except Exception:
 # ─────────────────────────────────────────────
 def explain_filing(filing_name, jurisdiction, regulator, urgency, days_remaining):
     days_int = int(days_remaining)
-    status_str = f"{abs(days_int)} days {'overdue' if days_int < 0 else 'remaining'}"
-    prompt = (
-        f"You are a senior RegTech compliance consultant.\n\n"
-        f"Filing: '{filing_name}'\n"
-        f"Regulator: '{regulator}' ({jurisdiction})\n"
-        f"Status: {urgency} — {status_str}\n\n"
-        f"In 3 concise sentences:\n"
-        f"1. What this filing is and what it reports to the regulator.\n"
-        f"2. The key regulatory risk or penalty for non-compliance.\n"
-        f"3. One practical action the compliance team should take right now given the urgency status above."
-    )
+
+    if urgency == 'Completed':
+        prompt = (
+            f"You are a senior RegTech compliance consultant.\n\n"
+            f"Filing: '{filing_name}'\n"
+            f"Regulator: '{regulator}' ({jurisdiction})\n"
+            f"Status: Completed (already submitted)\n\n"
+            f"In 3 concise sentences:\n"
+            f"1. What this filing is and what it reports to the regulator.\n"
+            f"2. Confirm that this filing has been successfully submitted and no further action is required for this cycle.\n"
+            f"3. One practical post-submission best practice the compliance team should follow "
+            f"(e.g. retaining records, preparing for the next cycle, or ensuring audit readiness)."
+        )
+    else:
+        status_str = f"{abs(days_int)} days {'overdue' if days_int < 0 else 'remaining'}"
+        prompt = (
+            f"You are a senior RegTech compliance consultant.\n\n"
+            f"Filing: '{filing_name}'\n"
+            f"Regulator: '{regulator}' ({jurisdiction})\n"
+            f"Status: {urgency} — {status_str}\n\n"
+            f"In 3 concise sentences:\n"
+            f"1. What this filing is and what it reports to the regulator.\n"
+            f"2. The key regulatory risk or penalty for non-compliance.\n"
+            f"3. One practical action the compliance team should take right now given the urgency status above."
+        )
     try:
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
