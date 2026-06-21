@@ -1,7 +1,5 @@
 # Global Regulatory Compliance Tracker
 
-Live Demo: [https://regtech-compliance-dashboard-jpeftg6ajanxph3onhb7vb.streamlit.app/](https://regtech-compliance-dashboard-jpeftg6ajanxph3onhb7vb.streamlit.app/)
-
 ## Project Overview
 
 A regulatory compliance dashboard built with Python and Streamlit to help teams monitor filing obligations across US (SEC) and UK (FCA/Companies House) jurisdictions.
@@ -9,6 +7,8 @@ A regulatory compliance dashboard built with Python and Streamlit to help teams 
 Rather than relying on manually updated status fields alone, the application recalculates deadline urgency from filing due dates each time it runs, helping teams identify overdue and upcoming obligations more reliably.
 
 The project demonstrates how a maintained filing tracker can be enhanced with automated deadline monitoring, proactive alerts, and AI-generated plain-English filing explanations.
+
+Live Demo: [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://regtech-compliance-dashboard-jpeftg6ajanxph3onhb7vb.streamlit.app/)
 
 ---
 
