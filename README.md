@@ -1,14 +1,10 @@
 # Global Regulatory Compliance Tracker
 
-<<<<<<< HEAD
-## Project Overview
-=======
 A regulatory compliance dashboard built with Python and Streamlit to help teams monitor filing obligations across US (SEC) and UK (FCA/Companies House) jurisdictions.
 
 Live Demo: [https://regtech-compliance-dashboard-jpeftg6ajanxph3onhb7vb.streamlit.app/](https://regtech-compliance-dashboard-jpeftg6ajanxph3onhb7vb.streamlit.app/)
 
 ## Screenshots
->>>>>>> f89c240 (Added screenshot files and fixed README: Python version, clone URL, and section divider)
 
 ![Main Dashboard](Screenshot1.png)
 *The main dashboard showing all filings, with the AI Explainer ready to be used.*
@@ -121,28 +117,12 @@ The project follows a simple pipeline architecture where data flows in one direc
 
 ---
 
-<<<<<<< HEAD
-## About
-=======
-## What Would You Build Next?
-
-- **Email/Slack Integration**: Implement a scheduled background job using `celery` or GitHub Actions to send automated alerts when a filing moves into the "Due Soon" or "Overdue" status.
-- **Authentication**: Add user login to restrict dashboard access to authorized compliance personnel.
-- **Database Backend**: Migrate the data storage from a static CSV file to a relational database (e.g., PostgreSQL ) to allow users to update filing statuses directly from the UI.
-
----
-
 ## About the Author
->>>>>>> f89c240 (Added screenshot files and fixed README: Python version, clone URL, and section divider)
 
 Built by **Nisrin Shoukat Attarwala**  
 MSc Financial Technology & Innovation, Bayes Business School, 2026.
 
 This project is part of a portfolio targeting roles in Fintech, RegTech, and Product Operations.  
-<<<<<<< HEAD
 See also: [DeFi Wallet Risk Intelligence](https://github.com/nattarw-tech/defi-wallet-risk-intelligence)
-=======
-See also: [DeFi Wallet Risk Intelligence](https://github.com/nattarw-tech/defi-wallet-risk-intelligence )
->>>>>>> f89c240 (Added screenshot files and fixed README: Python version, clone URL, and section divider)
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect_With_Me-blue?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nisrin-attarwala/)
