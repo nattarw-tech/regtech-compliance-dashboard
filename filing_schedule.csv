@@ -30,7 +30,7 @@ CPO-PQR,US,CFTC,Commodity Pool Operator,Quarterly,47,8/15/2026,Pending,cpo.repor
 Form 40,US,CFTC,Foreign Trader,As Required,-9,6/20/2026,Pending,trading@example.com,Statement of reporting trader identifying large position holders in CFTC-regulated markets.
 Large Trader Report,US,CFTC,Investment Firm,Daily,0,6/29/2026,Submitted,trading.ops@example.com,Daily report of large trader positions in futures and options markets submitted to the CFTC.
 NFA Annual Questionnaire,US,NFA,Futures Commission Merchant,Annual,94,10/1/2026,Pending,compliance@example.com,Annual self-examination questionnaire submitted by NFA members to demonstrate ongoing compliance.
-485BPOS,US,SEC,Open-Ended Fund,Annual,1,6/30/2026,Pending,compliance@example.com,"A post-effective amendment to a previously filed registration statement, reporting updates to the SEC on a securities offering"
+485BPOS,US,SEC,Open-Ended Fund,Annual,0,6/29/2026,Submitted,compliance@example.com,"A post-effective amendment to a previously filed registration statement, reporting updates to the SEC on a securities offering"
 Form 13F,US,SEC,Institutional Investment Manager,Quarterly,141,11/17/2026,Pending,trading@example.com,Quarterly report of equity holdings by institutional investment managers with over $100m AUM.
 Form NPORT-P,US,SEC,Registered Investment Company,Monthly,31,7/30/2026,Pending,portfolio.reporting@example.com,Monthly portfolio holdings report filed by registered open-end funds.
 VAT Return,UK,HMRC,All VAT-Registered Entities,Quarterly,123,10/30/2026,Pending,finance@example.com,Quarterly VAT return submitted to HMRC reporting output and input tax.
@@ -40,3 +40,4 @@ Form N-CSR,US,SEC,Registered Investment Company,Semi-Annual,161,12/7/2026,Pendin
 Large Trader Report,US,CFTC,Investment Firm,Daily,1,6/30/2026,Pending,trading.ops@example.com,Daily report of large trader positions in futures and options markets submitted to the CFTC.
 Large Trader Report,US,CFTC,Investment Firm,Daily,-2,6/27/2026,Pending,trading.ops@example.com,Daily report of large trader positions in futures and options markets submitted to the CFTC.
 EMIR Trade Repository Report,UK,FCA,Investment Firm,Daily,1,6/30/2026,Pending,derivatives@example.com,Daily reporting of OTC and exchange-traded derivative contracts to a registered trade repository.
+485BPOS,US,SEC,Open-Ended Fund,Annual,365,6/29/2027,Pending,compliance@example.com,"A post-effective amendment to a previously filed registration statement, reporting updates to the SEC on a securities offering"

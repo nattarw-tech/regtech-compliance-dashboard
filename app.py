@@ -71,41 +71,56 @@ except Exception:
 # ─────────────────────────────────────────────
 # AI EXPLAINER FUNCTION
 # ─────────────────────────────────────────────
-def explain_filing(filing_name, jurisdiction, regulator, urgency, days_remaining):
+def explain_filing(filing_name, jurisdiction, regulator, urgency, days_remaining, firm_type=""):
     days_int = int(days_remaining)
 
     if urgency == 'Completed':
-        prompt = (
-            f"You are a senior RegTech compliance consultant.\n\n"
-            f"Filing: '{filing_name}'\n"
-            f"Regulator: '{regulator}' ({jurisdiction})\n"
-            f"Status: Completed (already submitted)\n\n"
-            f"In 3 concise sentences:\n"
-            f"1. What this filing is and what it reports to the regulator.\n"
-            f"2. Confirm that this filing has been successfully submitted and no further action is required for this cycle.\n"
-            f"3. One practical post-submission best practice the compliance team should follow "
-            f"(e.g. retaining records, preparing for the next cycle, or ensuring audit readiness)."
+        status_context = "Status: Completed (already submitted this cycle)."
+        action_instruction = (
+            "3. One post-submission best practice (e.g. record retention, audit readiness, or next-cycle preparation).\n"
+            "4. Two key documents or records the compliance team should retain or archive after this submission."
         )
     else:
         status_str = f"{abs(days_int)} days {'overdue' if days_int < 0 else 'remaining'}"
-        prompt = (
-            f"You are a senior RegTech compliance consultant.\n\n"
-            f"Filing: '{filing_name}'\n"
-            f"Regulator: '{regulator}' ({jurisdiction})\n"
-            f"Status: {urgency} — {status_str}\n\n"
-            f"In 3 concise sentences:\n"
-            f"1. What this filing is and what it reports to the regulator.\n"
-            f"2. The key regulatory risk or penalty for non-compliance.\n"
-            f"3. One practical action the compliance team should take right now given the urgency status above."
+        status_context = f"Status: {urgency} — {status_str}."
+        action_instruction = (
+            "3. The single most important action the compliance team should take right now given the urgency.\n"
+            "4. A concise preparation checklist of 3–5 specific items that must be ready before this filing can be submitted "
+            "(e.g. specific documents, exhibits, data checks, or agreements that need to be reviewed or updated). "
+            "Be specific to this exact filing type — do not give generic advice."
         )
+
+    prompt = (
+        f"You are a senior RegTech compliance consultant with deep expertise in SEC, FCA, HMRC, CFTC, NFA, and Companies House filings.\n\n"
+        f"Filing: '{filing_name}'\n"
+        f"Regulator: '{regulator}' ({jurisdiction})\n"
+        f"Firm Type: '{firm_type}'\n"
+        f"{status_context}\n\n"
+        f"Respond in 4 concise points:\n"
+        f"1. What this filing is and what it reports to the regulator.\n"
+        f"2. The key regulatory risk or penalty for missing or incorrectly submitting this filing.\n"
+        f"{action_instruction}"
+    )
+
     try:
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
-                {"role": "system", "content": "You are a senior RegTech compliance consultant. Be concise and actionable."},
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a senior RegTech compliance consultant. "
+                        "Be concise, specific, and actionable. "
+                        "When listing preparation checklist items, be precise to the exact filing type — "
+                        "for example, for a 485BPOS mention the transmittal letter, wrap page, Part C exhibits, "
+                        "removal of liquidated fund data older than 1 year, and review of IMAs and sub-advisory agreements. "
+                        "For Form 13F mention CUSIP verification and the 45-day deadline. "
+                        "Always tailor your answer to the specific filing, regulator, and firm type provided."
+                    )
+                },
                 {"role": "user", "content": prompt}
             ],
-            max_tokens=200
+            max_tokens=400
         )
         return response.choices[0].message.content
     except Exception as e:
@@ -230,20 +245,31 @@ st.markdown('<p class="section-label">AI Compliance Explainer</p>', unsafe_allow
 st.markdown(
     "<p style='font-size:0.82rem;color:#6b7280;margin-top:-0.25rem;margin-bottom:0.75rem;'>"
     "Select any filing from your current filtered view to get a plain-English explanation "
-    "and an actionable recommendation based on its current urgency status.</p>",
+    "and an actionable preparation checklist based on its current urgency status.</p>",
     unsafe_allow_html=True
 )
 
 if display_df.empty:
     st.info("No filings match the current filters.")
 else:
-    filing_to_explain = st.selectbox(
+    # Build unique labels: "485BPOS — Due Soon (2026-10-10)"
+    display_df = display_df.reset_index(drop=True)
+    dropdown_labels = [
+        f"{row['Filing_Name']} — {row['Urgency']} ({row['Due_Date']})"
+        for _, row in display_df.iterrows()
+    ]
+
+    selected_label = st.selectbox(
         "Select a filing:",
-        options=["— select a filing —"] + display_df['Filing_Name'].tolist(),
+        options=["— select a filing —"] + dropdown_labels,
         label_visibility="collapsed"
     )
-    if filing_to_explain != "— select a filing —":
-        row = display_df[display_df['Filing_Name'] == filing_to_explain].iloc[0]
+
+    if selected_label != "— select a filing —":
+        # Match by position in the list, not by name
+        selected_index = dropdown_labels.index(selected_label)
+        row = display_df.iloc[selected_index]
+
         if ai_ready:
             with st.spinner("Generating compliance briefing..."):
                 explanation = explain_filing(
@@ -251,13 +277,12 @@ else:
                     jurisdiction=row['Jurisdiction'],
                     regulator=row['Regulator'],
                     urgency=row['Urgency'],
-                    days_remaining=row['Days_Remaining']
+                    days_remaining=row['Days_Remaining'],
+                    firm_type=row['Firm_Type']
                 )
             st.markdown(f'<div class="ai-box">{explanation}</div>', unsafe_allow_html=True)
         else:
             st.warning("AI explainer is unavailable — GROQ_API_KEY not configured.")
-
-st.markdown("<hr>", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
 # FILING SCHEDULE TABLE
