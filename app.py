@@ -164,6 +164,13 @@ with st.sidebar:
         help="Filter by compliance urgency"
     )
 
+    assigned_options = ["All"] + sorted(df['Assigned_To'].dropna().unique().tolist())
+    selected_assignee = st.selectbox(
+        "Assigned To",
+        options=assigned_options,
+        help="Filter by the person assigned to the filing"
+    )
+
     st.markdown("---")
     st.markdown(
         "<p style='font-size:0.75rem;color:#9ca3af;'>Built by Nisrin Shoukat Attarwala<br/>MSc Financial Technology &amp; Innovation<br/>Bayes Business School<br/>2026</p>",
@@ -180,10 +187,12 @@ if selected_month != "All":
     filtered_df = filtered_df[filtered_df['Month'] == selected_month]
 if selected_urgency != "All":
     filtered_df = filtered_df[filtered_df['Urgency'] == selected_urgency]
+if selected_assignee != "All":
+    filtered_df = filtered_df[filtered_df['Assigned_To'] == selected_assignee]
 
 display_df = filtered_df[[
     'Filing_Name', 'Urgency', 'Days_Remaining', 'Due_Date',
-    'Jurisdiction', 'Regulator', 'Firm_Type', 'Frequency', 'Status'
+    'Jurisdiction', 'Regulator', 'Firm_Type', 'Frequency', 'Status', 'Assigned_To'
 ]].copy()
 
 # ─────────────────────────────────────────────
@@ -415,6 +424,10 @@ with tab4:
         "Jurisdiction": st.column_config.SelectboxColumn(
             "Jurisdiction",
             options=["US", "UK"]
+        ),
+        "Assigned_To": st.column_config.TextColumn(
+        "Assigned To",
+        help="Name of the person responsible for this filing"
         ),
     }
 
