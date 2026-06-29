@@ -338,3 +338,130 @@ if not display_df.empty:
     st.plotly_chart(fig, use_container_width=True)
 else:
     st.info("No filings to display for the current filter selection.")
+
+# ─────────────────────────────────────────────
+# DATABASE UPDATE TOOL
+# ─────────────────────────────────────────────
+st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown('<p class="section-label">Database Update Tool</p>', unsafe_allow_html=True)
+st.markdown(
+    "<p style='font-size:0.82rem;color:#6b7280;margin-top:-0.25rem;margin-bottom:0.75rem;'>"
+    "Edit existing filings or add new ones. Use the date picker to set a due date — "
+    "Days Remaining will be recalculated automatically when you click Save Changes. "
+    "Marking a filing as Submitted will automatically schedule the next cycle.</p>",
+    unsafe_allow_html=True
+)
+
+import os
+from datetime import date, datetime, timedelta
+
+# ── Frequency → days mapping for auto-scheduling next cycle ──
+FREQUENCY_DAYS = {
+    "Daily":        1,
+    "Monthly":      30,
+    "Quarterly":    91,
+    "Semi-Annual":  182,
+    "Annual":       365,
+    "As Required":  None,   # no auto-schedule for ad-hoc filings
+}
+
+csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'filing_schedule.csv')
+raw_df = pd.read_csv(csv_path, sep=None, engine='python')
+
+# Convert Due_Date to real date objects for the calendar picker
+raw_df['Due_Date'] = pd.to_datetime(raw_df['Due_Date'], errors='coerce').dt.date
+
+column_config = {
+    "Due_Date": st.column_config.DateColumn(
+        "Due Date",
+        format="MM/DD/YYYY",
+        help="Click to open the date picker"
+    ),
+    "Days_From_Today": st.column_config.NumberColumn(
+        "Days Remaining",
+        help="Auto-calculated from Due Date on Save — do not edit manually",
+        disabled=True
+    ),
+    "Status": st.column_config.SelectboxColumn(
+        "Status",
+        options=["Pending", "Submitted", "Overdue"],
+        help="Current filing status"
+    ),
+    "Jurisdiction": st.column_config.SelectboxColumn(
+        "Jurisdiction",
+        options=["US", "UK"]
+    ),
+}
+
+edited_df = st.data_editor(
+    raw_df,
+    num_rows="dynamic",
+    use_container_width=True,
+    column_config=column_config,
+    key="filing_editor"
+)
+
+# Initialise session state flag
+if 'save_success_msg' not in st.session_state:
+    st.session_state.save_success_msg = None
+
+if st.button("Save Changes", type="primary"):
+    try:
+        today = date.today()
+        new_rows = []
+
+        def recalc_days(due_date_val):
+            if pd.isnull(due_date_val) or due_date_val is None:
+                return 0
+            if isinstance(due_date_val, str):
+                due_date_val = datetime.strptime(due_date_val, "%Y-%m-%d").date()
+            return (due_date_val - today).days
+
+        edited_df['Days_From_Today'] = edited_df['Due_Date'].apply(recalc_days)
+
+        for _, row in edited_df.iterrows():
+            if str(row.get('Status', '')).strip() == 'Submitted':
+                freq = str(row.get('Frequency', '')).strip()
+                interval = FREQUENCY_DAYS.get(freq)
+                if interval is not None:
+                    existing = edited_df[
+                        (edited_df['Filing_Name'] == row['Filing_Name']) &
+                        (edited_df['Status'] != 'Submitted')
+                    ]
+                    if existing.empty:
+                        due_date_val = row['Due_Date']
+                        if isinstance(due_date_val, str):
+                            due_date_val = datetime.strptime(due_date_val, "%Y-%m-%d").date()
+                        next_due = due_date_val + timedelta(days=interval)
+                        next_days = (next_due - today).days
+                        next_row = row.copy()
+                        next_row['Due_Date'] = next_due
+                        next_row['Days_From_Today'] = next_days
+                        next_row['Status'] = 'Pending'
+                        new_rows.append(next_row)
+
+        if new_rows:
+            next_cycle_df = pd.DataFrame(new_rows)
+            edited_df = pd.concat([edited_df, next_cycle_df], ignore_index=True)
+
+        edited_df['Due_Date'] = pd.to_datetime(
+            edited_df['Due_Date'], errors='coerce'
+        ).dt.strftime('%-m/%-d/%Y')
+
+        edited_df.to_csv(csv_path, index=False)
+
+        n_new = len(new_rows)
+        if n_new > 0:
+            st.session_state.save_success_msg = f"✅ Saved! {n_new} next-cycle filing(s) auto-scheduled."
+        else:
+            st.session_state.save_success_msg = "✅ Changes saved successfully!"
+
+        st.rerun()
+
+    except Exception as e:
+        st.error(f"Error saving changes: {e}")
+
+# Show the success message AFTER rerun (this renders on the refreshed page)
+if st.session_state.save_success_msg:
+    st.success(st.session_state.save_success_msg)
+    st.session_state.save_success_msg = None
