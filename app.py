@@ -239,254 +239,253 @@ with k5:
 st.markdown("<hr>", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
-# FIX 3 — AI COMPLIANCE EXPLAINER moved ABOVE the filing schedule table
+# TABS
 # ─────────────────────────────────────────────
-st.markdown('<p class="section-label">AI Compliance Explainer</p>', unsafe_allow_html=True)
-st.markdown(
-    "<p style='font-size:0.82rem;color:#6b7280;margin-top:-0.25rem;margin-bottom:0.75rem;'>"
-    "Select any filing from your current filtered view to get a plain-English explanation "
-    "and an actionable preparation checklist based on its current urgency status.</p>",
-    unsafe_allow_html=True
-)
+tab1, tab2, tab3, tab4 = st.tabs([
+    "🔍 Overview",
+    "📋 Filing Schedule",
+    "📊 Charts",
+    "🗂 Manage Filings"
+])
 
-if display_df.empty:
-    st.info("No filings match the current filters.")
-else:
-    # Build unique labels: "485BPOS — Due Soon (2026-10-10)"
-    display_df = display_df.reset_index(drop=True)
-    dropdown_labels = [
-        f"{row['Filing_Name']} — {row['Urgency']} ({row['Due_Date']})"
-        for _, row in display_df.iterrows()
-    ]
-
-    selected_label = st.selectbox(
-        "Select a filing:",
-        options=["— select a filing —"] + dropdown_labels,
-        label_visibility="collapsed"
+# ══════════════════════════════════════════════
+# TAB 1 - OVERVIEW: AI Explainer
+# ══════════════════════════════════════════════
+with tab1:
+    st.markdown('<p class="section-label">AI Compliance Explainer</p>', unsafe_allow_html=True)
+    st.markdown(
+        "<p style='font-size:0.82rem;color:#6b7280;margin-top:-0.25rem;margin-bottom:0.75rem;'>"
+        "Select any filing from your current filtered view to get a plain-English explanation "
+        "and an actionable preparation checklist based on its current urgency status.</p>",
+        unsafe_allow_html=True
     )
 
-    if selected_label != "— select a filing —":
-        # Match by position in the list, not by name
-        selected_index = dropdown_labels.index(selected_label)
-        row = display_df.iloc[selected_index]
+    if display_df.empty:
+        st.info("No filings match the current filters.")
+    else:
+        display_df = display_df.reset_index(drop=True)
+        dropdown_labels = [
+            f"{row['Filing_Name']} — {row['Urgency']} ({row['Due_Date']})"
+            for _, row in display_df.iterrows()
+        ]
 
-        if ai_ready:
-            with st.spinner("Generating compliance briefing..."):
-                explanation = explain_filing(
-                    filing_name=row['Filing_Name'],
-                    jurisdiction=row['Jurisdiction'],
-                    regulator=row['Regulator'],
-                    urgency=row['Urgency'],
-                    days_remaining=row['Days_Remaining'],
-                    firm_type=row['Firm_Type']
-                )
-            st.markdown(f'<div class="ai-box">{explanation}</div>', unsafe_allow_html=True)
-        else:
-            st.warning("AI explainer is unavailable — GROQ_API_KEY not configured.")
+        selected_label = st.selectbox(
+            "Select a filing:",
+            options=["— select a filing —"] + dropdown_labels,
+            label_visibility="collapsed"
+        )
 
-# ─────────────────────────────────────────────
-# FILING SCHEDULE TABLE
-# FIX 2 — table height auto-sizes to actual row count; no blank rows on filter
-# ─────────────────────────────────────────────
-st.markdown('<p class="section-label">Filing Schedule</p>', unsafe_allow_html=True)
+        if selected_label != "— select a filing —":
+            selected_index = dropdown_labels.index(selected_label)
+            row = display_df.iloc[selected_index]
 
-def style_urgency(val):
-    colours = {
-        'Overdue':   'color: #c92a2a; font-weight: 700;',
-        'Due Soon':  'color: #e67700; font-weight: 700;',
-        'Completed': 'color: #2b8a3e; font-weight: 700;',
-        'On Track':  'color: #1a1f36;'
+            if ai_ready:
+                with st.spinner("Generating compliance briefing..."):
+                    explanation = explain_filing(
+                        filing_name=row['Filing_Name'],
+                        jurisdiction=row['Jurisdiction'],
+                        regulator=row['Regulator'],
+                        urgency=row['Urgency'],
+                        days_remaining=row['Days_Remaining'],
+                        firm_type=row['Firm_Type']
+                    )
+                st.markdown(f'<div class="ai-box">{explanation}</div>', unsafe_allow_html=True)
+            else:
+                st.warning("AI explainer is unavailable — GROQ_API_KEY not configured.")
+
+# ══════════════════════════════════════════════
+# TAB 2 - FILING SCHEDULE TABLE
+# ══════════════════════════════════════════════
+with tab2:
+    st.markdown('<p class="section-label">Filing Schedule</p>', unsafe_allow_html=True)
+
+    def style_urgency(val):
+        colours = {
+            'Overdue':   'color: #c92a2a; font-weight: 700;',
+            'Due Soon':  'color: #e67700; font-weight: 700;',
+            'Completed': 'color: #2b8a3e; font-weight: 700;',
+            'On Track':  'color: #1a1f36;'
+        }
+        return colours.get(val, '')
+
+    if display_df.empty:
+        st.info("No filings match the current filters.")
+    else:
+        ROW_HEIGHT  = 35
+        HEADER_PAD  = 38
+        table_height = min(len(display_df) * ROW_HEIGHT + HEADER_PAD, 600)
+
+        styled_table = display_df.style.map(style_urgency, subset=['Urgency'])
+        st.dataframe(styled_table, use_container_width=True, hide_index=True, height=table_height)
+
+# ══════════════════════════════════════════════
+# TAB 3 - CHARTS (capped at 20 most urgent)
+# ══════════════════════════════════════════════
+with tab3:
+    st.markdown('<p class="section-label">Deadline Proximity &mdash; Days Remaining by Filing</p>', unsafe_allow_html=True)
+    st.markdown(
+        "<p style='font-size:0.82rem;color:#6b7280;margin-top:-0.25rem;margin-bottom:0.75rem;'>"
+        "Each bar shows how many days remain until the filing deadline. "
+        "Negative values are overdue. The dotted line marks the 30-day action threshold. "
+        "Showing the 20 most urgent filings.</p>",
+        unsafe_allow_html=True
+    )
+
+    if display_df.empty:
+        st.info("No filings match the current filters.")
+    else:
+        # Cap to 20 most urgent (lowest Days_Remaining first)
+        chart_df = display_df.sort_values('Days_Remaining').head(20).copy()
+
+        colour_map = {
+            'Overdue':   '#e03131',
+            'Due Soon':  '#f59f00',
+            'On Track':  '#1971c2',
+            'Completed': '#2f9e44'
+        }
+
+        fig = px.bar(
+            chart_df,
+            x='Days_Remaining',
+            y='Filing_Name',
+            orientation='h',
+            color='Urgency',
+            color_discrete_map=colour_map,
+            labels={'Days_Remaining': 'Days Remaining', 'Filing_Name': ''},
+            height=max(300, len(chart_df) * 28 + 60)
+        )
+        fig.add_vline(x=30, line_dash="dot", line_color="#adb5bd", annotation_text="30-day threshold")
+        fig.add_vline(x=0,  line_dash="solid", line_color="#868e96", line_width=1)
+        fig.update_layout(
+            plot_bgcolor='#f7f8fc',
+            paper_bgcolor='#f7f8fc',
+            font=dict(family='Inter, Segoe UI, sans-serif', size=12),
+            legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
+            margin=dict(l=10, r=20, t=10, b=40),
+            yaxis=dict(autorange='reversed')
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+# ══════════════════════════════════════════════
+# TAB 4 - MANAGE FILINGS (Database Update Tool)
+# ══════════════════════════════════════════════
+with tab4:
+    st.markdown('<p class="section-label">Database Update Tool</p>', unsafe_allow_html=True)
+    st.markdown(
+        "<p style='font-size:0.82rem;color:#6b7280;margin-top:-0.25rem;margin-bottom:0.75rem;'>"
+        "Edit existing filings or add new ones. Use the date picker to set a due date — "
+        "Days Remaining will be recalculated automatically when you click Save Changes. "
+        "Marking a filing as Submitted will automatically schedule the next cycle.</p>",
+        unsafe_allow_html=True
+    )
+
+    import os
+    from datetime import date, datetime, timedelta
+
+    # Frequency → days mapping for auto-scheduling next cycle
+    FREQUENCY_DAYS = {
+        "Daily":        1,
+        "Monthly":      30,
+        "Quarterly":    91,
+        "Semi-Annual":  182,
+        "Annual":       365,
+        "As Required":  None,
     }
-    return colours.get(val, '')
 
-if display_df.empty:
-    st.info("No filings match the current filters.")
-else:
-    ROW_HEIGHT   = 35   # px per data row
-    HEADER_PAD   = 38   # px for the header row
-    # Height is calculated from the actual number of rows in the filtered result
-    # so the table shrinks cleanly when filters reduce the row count
-    table_height = len(display_df) * ROW_HEIGHT + HEADER_PAD
+    csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'filing_schedule.csv')
+    raw_df = pd.read_csv(csv_path, sep=None, engine='python')
+    # Convert Due_Date to real date objects for the calendar picker
+    raw_df['Due_Date'] = pd.to_datetime(raw_df['Due_Date'], errors='coerce').dt.date
 
-    styled_table = display_df.style.map(style_urgency, subset=['Urgency'])
-    st.dataframe(styled_table, use_container_width=True, hide_index=True, height=table_height)
+    column_config = {
+        "Due_Date": st.column_config.DateColumn(
+            "Due Date",
+            format="MM/DD/YYYY",
+            help="Click to open the date picker"
+        ),
+        "Days_From_Today": st.column_config.NumberColumn(
+            "Days Remaining",
+            help="Auto-calculated from Due Date on Save — do not edit manually",
+            disabled=True
+        ),
+        "Status": st.column_config.SelectboxColumn(
+            "Status",
+            options=["Pending", "Submitted", "Overdue"],
+        ),
+        "Jurisdiction": st.column_config.SelectboxColumn(
+            "Jurisdiction",
+            options=["US", "UK"]
+        ),
+    }
 
-st.markdown("<hr>", unsafe_allow_html=True)
-
-# ─────────────────────────────────────────────
-# DEADLINE PROXIMITY CHART
-# ─────────────────────────────────────────────
-st.markdown('<p class="section-label">Deadline Proximity &mdash; Days Remaining by Filing</p>', unsafe_allow_html=True)
-st.markdown(
-    "<p style='font-size:0.82rem;color:#6b7280;margin-top:-0.25rem;margin-bottom:0.75rem;'>"
-    "Each bar shows how many days remain until the filing deadline. "
-    "Negative values are overdue. The dotted line marks the 30-day action threshold.</p>",
-    unsafe_allow_html=True
-)
-
-colour_map = {
-    'Overdue':   '#e03131',
-    'Due Soon':  '#f08c00',
-    'On Track':  '#2f9e44',
-    'Completed': '#1971c2'
-}
-
-if not display_df.empty:
-    chart_df = display_df.sort_values('Days_Remaining')
-    fig = px.bar(
-        chart_df,
-        x='Days_Remaining',
-        y='Filing_Name',
-        orientation='h',
-        color='Urgency',
-        color_discrete_map=colour_map,
-        text='Days_Remaining',
-        labels={'Days_Remaining': 'Days Until Due (negative = overdue)', 'Filing_Name': ''},
-        height=max(300, len(chart_df) * 42)
+    edited_df = st.data_editor(
+        raw_df,
+        num_rows="dynamic",
+        use_container_width=True,
+        column_config=column_config,
+        key="filing_editor"
     )
-    fig.update_traces(texttemplate='%{text}d', textposition='outside', marker_line_width=0)
-    fig.update_layout(
-        plot_bgcolor='#f7f8fc',
-        paper_bgcolor='#f7f8fc',
-        font=dict(family='Inter, Segoe UI, sans-serif', size=12, color='#1a1f36'),
-        xaxis=dict(showgrid=True, gridcolor='#e2e6f0', zeroline=True, zerolinecolor='#adb5bd', zerolinewidth=1.5),
-        yaxis=dict(showgrid=False),
-        legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1, title=''),
-        margin=dict(l=10, r=70, t=10, b=30)
-    )
-    fig.add_vline(
-        x=30, line_dash="dot", line_color="#adb5bd",
-        annotation_text="30-day threshold",
-        annotation_position="top right",
-        annotation_font_size=10
-    )
-    st.plotly_chart(fig, use_container_width=True)
-else:
-    st.info("No filings to display for the current filter selection.")
 
-# ─────────────────────────────────────────────
-# DATABASE UPDATE TOOL
-# ─────────────────────────────────────────────
-st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown('<p class="section-label">Database Update Tool</p>', unsafe_allow_html=True)
-st.markdown(
-    "<p style='font-size:0.82rem;color:#6b7280;margin-top:-0.25rem;margin-bottom:0.75rem;'>"
-    "Edit existing filings or add new ones. Use the date picker to set a due date — "
-    "Days Remaining will be recalculated automatically when you click Save Changes. "
-    "Marking a filing as Submitted will automatically schedule the next cycle.</p>",
-    unsafe_allow_html=True
-)
+    # Initialise session state flag
+    if 'save_success_msg' not in st.session_state:
+        st.session_state.save_success_msg = None
 
-import os
-from datetime import date, datetime, timedelta
+    if st.button("Save Changes", type="primary"):
+        try:
+            today = date.today()
+            new_rows = []
 
-# ── Frequency → days mapping for auto-scheduling next cycle ──
-FREQUENCY_DAYS = {
-    "Daily":        1,
-    "Monthly":      30,
-    "Quarterly":    91,
-    "Semi-Annual":  182,
-    "Annual":       365,
-    "As Required":  None,   # no auto-schedule for ad-hoc filings
-}
+            def recalc_days(due_date_val):
+                if pd.isnull(due_date_val) or due_date_val is None:
+                    return 0
+                if isinstance(due_date_val, str):
+                    due_date_val = datetime.strptime(due_date_val, "%Y-%m-%d").date()
+                return (due_date_val - today).days
 
-csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'filing_schedule.csv')
-raw_df = pd.read_csv(csv_path, sep=None, engine='python')
+            edited_df['Days_From_Today'] = edited_df['Due_Date'].apply(recalc_days)
 
-# Convert Due_Date to real date objects for the calendar picker
-raw_df['Due_Date'] = pd.to_datetime(raw_df['Due_Date'], errors='coerce').dt.date
+            for _, row in edited_df.iterrows():
+                if str(row.get('Status', '')).strip() == 'Submitted':
+                    freq = str(row.get('Frequency', '')).strip()
+                    interval = FREQUENCY_DAYS.get(freq)
+                    if interval is not None:
+                        existing = edited_df[
+                            (edited_df['Filing_Name'] == row['Filing_Name']) &
+                            (edited_df['Status'] != 'Submitted')
+                        ]
+                        if existing.empty:
+                            due_date_val = row['Due_Date']
+                            if isinstance(due_date_val, str):
+                                due_date_val = datetime.strptime(due_date_val, "%Y-%m-%d").date()
+                            next_due = due_date_val + timedelta(days=interval)
+                            next_days = (next_due - today).days
+                            next_row = row.copy()
+                            next_row['Due_Date'] = next_due
+                            next_row['Days_From_Today'] = next_days
+                            next_row['Status'] = 'Pending'
+                            new_rows.append(next_row)
 
-column_config = {
-    "Due_Date": st.column_config.DateColumn(
-        "Due Date",
-        format="MM/DD/YYYY",
-        help="Click to open the date picker"
-    ),
-    "Days_From_Today": st.column_config.NumberColumn(
-        "Days Remaining",
-        help="Auto-calculated from Due Date on Save — do not edit manually",
-        disabled=True
-    ),
-    "Status": st.column_config.SelectboxColumn(
-        "Status",
-        options=["Pending", "Submitted", "Overdue"],
-        help="Current filing status"
-    ),
-    "Jurisdiction": st.column_config.SelectboxColumn(
-        "Jurisdiction",
-        options=["US", "UK"]
-    ),
-}
+            if new_rows:
+                next_cycle_df = pd.DataFrame(new_rows)
+                edited_df = pd.concat([edited_df, next_cycle_df], ignore_index=True)
 
-edited_df = st.data_editor(
-    raw_df,
-    num_rows="dynamic",
-    use_container_width=True,
-    column_config=column_config,
-    key="filing_editor"
-)
+            edited_df['Due_Date'] = pd.to_datetime(
+                edited_df['Due_Date'], errors='coerce'
+            ).dt.strftime('%-m/%-d/%Y')
 
-# Initialise session state flag
-if 'save_success_msg' not in st.session_state:
-    st.session_state.save_success_msg = None
+            edited_df.to_csv(csv_path, index=False)
 
-if st.button("Save Changes", type="primary"):
-    try:
-        today = date.today()
-        new_rows = []
+            n_new = len(new_rows)
+            if n_new > 0:
+                st.session_state.save_success_msg = f"✅ Saved! {n_new} next-cycle filing(s) auto-scheduled."
+            else:
+                st.session_state.save_success_msg = "✅ Changes saved successfully!"
 
-        def recalc_days(due_date_val):
-            if pd.isnull(due_date_val) or due_date_val is None:
-                return 0
-            if isinstance(due_date_val, str):
-                due_date_val = datetime.strptime(due_date_val, "%Y-%m-%d").date()
-            return (due_date_val - today).days
+            st.rerun()
 
-        edited_df['Days_From_Today'] = edited_df['Due_Date'].apply(recalc_days)
+        except Exception as e:
+            st.error(f"Error saving changes: {e}")
 
-        for _, row in edited_df.iterrows():
-            if str(row.get('Status', '')).strip() == 'Submitted':
-                freq = str(row.get('Frequency', '')).strip()
-                interval = FREQUENCY_DAYS.get(freq)
-                if interval is not None:
-                    existing = edited_df[
-                        (edited_df['Filing_Name'] == row['Filing_Name']) &
-                        (edited_df['Status'] != 'Submitted')
-                    ]
-                    if existing.empty:
-                        due_date_val = row['Due_Date']
-                        if isinstance(due_date_val, str):
-                            due_date_val = datetime.strptime(due_date_val, "%Y-%m-%d").date()
-                        next_due = due_date_val + timedelta(days=interval)
-                        next_days = (next_due - today).days
-                        next_row = row.copy()
-                        next_row['Due_Date'] = next_due
-                        next_row['Days_From_Today'] = next_days
-                        next_row['Status'] = 'Pending'
-                        new_rows.append(next_row)
-
-        if new_rows:
-            next_cycle_df = pd.DataFrame(new_rows)
-            edited_df = pd.concat([edited_df, next_cycle_df], ignore_index=True)
-
-        edited_df['Due_Date'] = pd.to_datetime(
-            edited_df['Due_Date'], errors='coerce'
-        ).dt.strftime('%-m/%-d/%Y')
-
-        edited_df.to_csv(csv_path, index=False)
-
-        n_new = len(new_rows)
-        if n_new > 0:
-            st.session_state.save_success_msg = f"✅ Saved! {n_new} next-cycle filing(s) auto-scheduled."
-        else:
-            st.session_state.save_success_msg = "✅ Changes saved successfully!"
-
-        st.rerun()
-
-    except Exception as e:
-        st.error(f"Error saving changes: {e}")
-
-# Show the success message AFTER rerun (this renders on the refreshed page)
-if st.session_state.save_success_msg:
-    st.success(st.session_state.save_success_msg)
-    st.session_state.save_success_msg = None
+    if st.session_state.save_success_msg:
+        st.success(st.session_state.save_success_msg)
+        st.session_state.save_success_msg = None
