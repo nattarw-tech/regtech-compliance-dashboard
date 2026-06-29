@@ -6,7 +6,7 @@ Form 13F,US,SEC,Institutional Investment Manager,Quarterly,50,8/18/2026,Submitte
 Form NPORT-P,US,SEC,Registered Investment Company,Monthly,1,6/30/2026,Submitted,portfolio.reporting@example.com,Monthly portfolio holdings report filed by registered open-end funds.
 Form N-CEN,US,SEC,Registered Investment Company,Annual,78,9/15/2026,Pending,fund.admin@example.com,Annual census report providing structural and operational data about registered investment companies.
 Form N-2,US,SEC,Closed-End Fund,As Required,94,10/1/2026,Pending,closedend@example.com,Registration statement for closed-end management investment companies.
-Form 486APOS,US,SEC,Open-Ended Fund,As Required,103,10/10/2026,Pending,legal@example.com,Post-effective amendment to registration statement for open-end funds under the 1940 Act.
+Form 486APOS,US,SEC,Open-Ended Fund,As Required,-4,6/25/2026,Pending,legal@example.com,Post-effective amendment to registration statement for open-end funds under the 1940 Act.
 Form ADV Annual Update,US,SEC,Investment Adviser,Annual,93,9/30/2026,Pending,adviser.compliance@example.com,Annual update to Form ADV for registered investment advisers disclosing business practices and conflicts.
 Form PF,US,SEC,Private Fund Adviser,Quarterly,61,8/29/2026,Pending,private.funds@example.com,Reporting form for private fund advisers to provide systemic risk data to the SEC and FSOC.
 Form D,US,SEC,Private Fund Adviser,As Required,108,10/15/2026,Pending,legal@example.com,Notice of exempt offering of securities filed within 15 days of first sale.
@@ -38,6 +38,6 @@ PAYE Real Time Information,UK,HMRC,All Employers,Monthly,30,7/29/2026,Pending,pa
 Large Trader Report,US,CFTC,Investment Firm,Daily,-3,6/26/2026,Submitted,trading.ops@example.com,Daily report of large trader positions in futures and options markets submitted to the CFTC.
 Form N-CSR,US,SEC,Registered Investment Company,Semi-Annual,161,12/7/2026,Pending,reporting@example.com,Certified shareholder report filed by registered management investment companies.
 Large Trader Report,US,CFTC,Investment Firm,Daily,1,6/30/2026,Pending,trading.ops@example.com,Daily report of large trader positions in futures and options markets submitted to the CFTC.
-Large Trader Report,US,CFTC,Investment Firm,Daily,-2,6/27/2026,Pending,trading.ops@example.com,Daily report of large trader positions in futures and options markets submitted to the CFTC.
+Large Trader Report,US,CFTC,Investment Firm,Daily,0,6/29/2026,Submitted,trading.ops@example.com,Daily report of large trader positions in futures and options markets submitted to the CFTC.
 EMIR Trade Repository Report,UK,FCA,Investment Firm,Daily,1,6/30/2026,Pending,derivatives@example.com,Daily reporting of OTC and exchange-traded derivative contracts to a registered trade repository.
 485BPOS,US,SEC,Open-Ended Fund,Annual,365,6/29/2027,Pending,compliance@example.com,"A post-effective amendment to a previously filed registration statement, reporting updates to the SEC on a securities offering"
