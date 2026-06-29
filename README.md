@@ -18,8 +18,8 @@ Live Demo: [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_
 ![Filtered View](Screenshot4.png)
 *Filtering by Urgency Status - Due Soon to isolate specific filings.*
 
-![Filtered View](Screenshot5.png)
-*Update the database in real-time.*
+![Database Update Tool](Screenshot5.png)
+*The in-app Database Update Tool - edit filings, add new ones, and update due dates via a calendar picker without touching the CSV.*
 
 ---
 
@@ -90,6 +90,15 @@ The Database Update Tool creates a feedback loop: users can edit the CSV through
 - **Not Financial or Legal Advice**: This dashboard is a portfolio project demonstrating technical implementation of RegTech concepts. It is not intended for use in actual regulatory reporting.
 - **Simulated Data**: The filings and deadlines provided in the CSV are representative examples. In a production environment, this system would connect directly to a regulatory data feed or an internal GRC (Governance, Risk, and Compliance) platform API.
 - **Stateless AI**: The Groq AI integration currently evaluates each filing in isolation based on the prompt. It does not maintain a conversational memory or have access to a firm's historical filing data.
+
+---
+
+## Scalability Design
+
+As the number of tracked filings grows, the dashboard is designed to remain usable through two complementary approaches:
+
+- **Tabbed Layout**: The interface is organised into four tabs — Overview, Filing Schedule, Charts, and Manage Filings — so each section lives on its own tab rather than stacking vertically on a single scrolling page. This keeps the UI clean regardless of how many filings are added.
+- **Chart Capping**: The Deadline Proximity Chart displays only the 20 most urgent filings (sorted by days remaining), keeping the chart focused and readable. A label indicates when the view is capped.
 
 ---
 
